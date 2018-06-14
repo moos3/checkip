@@ -20,7 +20,7 @@ build:
         go test ./...
     - script:
       name: go build
-      code: CGO_ENABLED=0 go build -a -ldflags '-s' -installsuffix cgo -o app .
+      code: CGO_ENABLED=0 go build -a -ldflags '-s' -installsuffix cgo -o app ./...
     - script:
       name: copy binary
       code: cp app "$WERCKER_OUTPUT_DIR"
