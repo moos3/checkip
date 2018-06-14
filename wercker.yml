@@ -25,8 +25,10 @@ build:
       name: copy binary
       code: cp app "$WERCKER_OUTPUT_DIR"
 deploy:
-  box: google/golang
-  - internal/docker-scratch-push:
+    box: google/golang
+    steps:
+     # Use the scratch step to build a container from scratch based on the files present
+    - internal/docker-scratch-push:
     username: $QUAY_USERNAME
     password: $QUAY_PASSWORD
     cmd: ./app
