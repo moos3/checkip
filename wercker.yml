@@ -29,10 +29,10 @@ deploy:
     steps:
      # Use the scratch step to build a container from scratch based on the files present
     - internal/docker-scratch-push:
-    username: $QUAY_USERNAME
-    password: $QUAY_PASSWORD
-    cmd: ./app
-    tag: $WERCKER_GIT_COMMIT
-    ports: "3000"
-    resposity: quay.io/moos3/checkip
-    registry: https://quay.io
+      username: $QUAY_USERNAME
+      password: $QUAY_PASSWORD
+      cmd: ./app
+      tag: $WERCKER_GIT_COMMIT
+      ports: "3000"
+      resposity: quay.io/moos3/checkip
+      registry: https://quay.io
