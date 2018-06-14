@@ -1,0 +1,36 @@
+box:
+  id: golang
+  ports: 3000
+dev:
+  steps:
+    - internal/watch:
+       code: |
+        go build ./...
+        ./source
+       reload: true
+build:
+  box: google/golang
+  steps:
+    # lint 
+    - wercker/golint
+    # test
+    - script:
+      name: go test
+      code: |
+        go test ./...
+    - script:
+      name: go build
+      code: CGO_ENABLED=0 go build -a -ldflags '-s' -installsuffix cgo -o app .
+    - script:
+      name: copy binary
+      code: cp app "$WERCKER_OUTPUT_DIR"
+deploy:
+  box: google/golang
+  - internal/docker-scratch-push:
+  username: $QUAY_USERNAME
+  password: $QUAY_PASSWORD
+  cmd: ./app
+  tag: $WERCKER_GIT_COMMIT
+  ports: "3000"
+  resposity: quay.io/moos3/checkip
+  registry: https://quay.io
