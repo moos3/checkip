@@ -8,20 +8,22 @@ dev:
         go build ./...
         ./source
        reload: true
+       
 build:
   box: golang
   steps:
     # lint 
     - wercker/golint
+    # setup the workspace
     - setup-go-workspace:
         package-dir: github.com/moos3/checkIp
+    # install all the dep tools
     - script:
         name: install go tools
         code: |
-          go get -u github.com/tomasen/realip
-          go get -u github.com/kardianos/govendor
           go get -u -v github.com/golang/dep
           go get -u -v github.com/golang/dep/cmd/dep
+    # install all the depens
     - script:
         name: install dependencies
         code: |
@@ -31,21 +33,24 @@ build:
       name: go test
       code: |
         go test ./...
+    # build
     - script:
       name: go build
       code: CGO_ENABLED=0 go build -a -ldflags '-s' -installsuffix cgo -o app ./...
+    # copy bin
     - script:
       name: copy binary
       code: cp app "$WERCKER_OUTPUT_DIR"
+      
 deploy:
     box: golang
     steps:
-     # Use the scratch step to build a container from scratch based on the files present
-    - internal/docker-scratch-push:
-      username: $QUAY_USERNAME
-      password: $QUAY_PASSWORD
-      cmd: ./app
-      tag: $WERCKER_GIT_COMMIT
-      ports: "3000"
-      resposity: quay.io/moos3/checkip
-      registry: https://quay.io
+      # ship to quay
+      - internal/docker-scratch-push:
+        username: $QUAY_USERNAME
+        password: $QUAY_PASSWORD
+        cmd: ./app
+        tag: $WERCKER_GIT_COMMIT
+        ports: "3000"
+        resposity: quay.io/moos3/checkip
+        registry: https://quay.io
