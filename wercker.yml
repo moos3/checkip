@@ -45,6 +45,10 @@ build:
 deploy-app:
     box: golang
     steps:
+      - script:
+        name: test
+        code: |
+          echo "Hello World"
       # ship to quay
       - internal/docker-scratch-push:
         username: $QUAY_USERNAME
