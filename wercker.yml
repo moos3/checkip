@@ -41,13 +41,16 @@ build:
     - script:
       name: copy binary
       code: cp app "$WERCKER_OUTPUT_DIR"
-
-    # ship to quay
-    - internal/docker-scratch-push:
-      username: $QUAY_USERNAME
-      password: $QUAY_PASSWORD
-      cmd: ./app
-      tag: $WERCKER_GIT_COMMIT
-      ports: "3000"
-      resposity: moos3/checkip
-      registry: https://quay.io
+      
+deploy-app:
+    box: golang
+    steps:
+      # ship to quay
+      - internal/docker-scratch-push:
+        username: $QUAY_USERNAME
+        password: $QUAY_PASSWORD
+        cmd: ./app
+        tag: $WERCKER_GIT_COMMIT
+        ports: "3000"
+        resposity: moos3/checkip
+        registry: https://quay.io
