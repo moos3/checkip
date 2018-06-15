@@ -13,6 +13,11 @@ build:
   steps:
     # lint 
     - wercker/golint
+    - script:
+      name: add realip
+      code: |
+      go get -u github.com/tomasen/realip
+      go get -u github.com/kardianos/govendor
     # test
     - script:
       name: go test
