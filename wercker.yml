@@ -9,7 +9,7 @@ dev:
         ./source
        reload: true
 build:
-  box: google/golang
+  box: golang
   steps:
     # lint 
     - wercker/golint
@@ -25,7 +25,7 @@ build:
       name: copy binary
       code: cp app "$WERCKER_OUTPUT_DIR"
 deploy:
-    box: google/golang
+    box: golang
     steps:
      # Use the scratch step to build a container from scratch based on the files present
     - internal/docker-scratch-push:
