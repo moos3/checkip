@@ -8,7 +8,7 @@ dev:
         go build ./...
         ./source
        reload: true
-       
+
 build:
   box: golang
   steps:
@@ -42,7 +42,7 @@ build:
       name: copy binary
       code: cp app "$WERCKER_OUTPUT_DIR"
       
-deploy:
+deploy-app:
     box: golang
     steps:
       # ship to quay
