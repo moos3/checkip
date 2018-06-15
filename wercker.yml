@@ -52,5 +52,5 @@ deploy-app:
         cmd: ./app
         tag: $WERCKER_GIT_COMMIT
         ports: "3000"
-        resposity: quay.io/moos3/checkip
+        resposity: moos3/checkip
         registry: https://quay.io
