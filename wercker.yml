@@ -13,11 +13,20 @@ build:
   steps:
     # lint 
     - wercker/golint
+    - wercker/setup-go-workspace
+      package-dir: github.com/moos3/checkIp
+
     - script:
-      name: add realip
-      code: |
-      go get -u github.com/tomasen/realip
-      go get -u github.com/kardianos/govendor
+        name: install go tools
+        code: |
+          go get -u github.com/tomasen/realip
+          go get -u github.com/kardianos/govendor
+          go get -u -v github.com/golang/dep
+          go get -u -v github.com/golang/dep/cmd/dep
+    - script:
+        name: install dependencies
+        code: |
+          dep ensure
     # test
     - script:
       name: go test
