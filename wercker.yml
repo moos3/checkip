@@ -13,9 +13,6 @@ build:
   steps:
     # lint 
     - wercker/golint
-    - wercker/setup-go-workspace
-      package-dir: github.com/moos3/checkIp
-
     - script:
         name: install go tools
         code: |
