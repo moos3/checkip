@@ -7,7 +7,7 @@ RUN mkdir -p /go/src/github.com/moos3/checkip
 WORKDIR /go/src/github.com/moos3/checkip
 ADD . /go/src/github.com/moos3/checkip
 RUN dep ensure -vendor-only
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o checkip .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /app/checkip .
 
 EXPOSE 3000
 
