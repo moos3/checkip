@@ -18,14 +18,11 @@ import (
 	"github.com/tomasen/realip"
 )
 
-/*
-* This is a very simple checkip and geoip information service
- */
-
+// This is a very simple checkip and geoip information service
 type key int
 
 // GeoIP -
-//This is to hold the GeoIP Lookup information that will be returned from our outbound call to freegeoip.net
+// This is to hold the GeoIP Lookup information that will be returned from our outbound call to freegeoip.net
 type GeoIP struct {
 	IP            string  `json:"ip"`
 	Type          string  `json:"type"`
@@ -125,14 +122,17 @@ func main() {
 	logger.Println("Server stopped")
 }
 
-// Setup all your routes
+// routes -
+// Setup all your routes simple mux router
 func routes() *http.ServeMux {
 	router := http.NewServeMux()
 	router.HandleFunc("/", indexHandler)
 	router.HandleFunc("/health", healthHandler)
+	router.HandleFunc("/ping", pingHandler)
 	return router
 }
 
+// indexHandler -
 // Shows how to use templates with template functions and data
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -145,6 +145,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
    <head><title>Current IP Check</title></head>
    <body>Current IP Address: {{ .IP }}<br/> TimeZone: {{ .TZ }}<br/></body></html>`
 
+	// Fetch Public IP Address
+	// LookUp Geo information
+	// Fetch timezone from the lat lon
 	ip := realip.FromRequest(r)
 	geo := lookupGeoIP(ip)
 	tz := lookupGeoTz(geo.Lat, geo.Lon)
@@ -178,6 +181,12 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	if err := tmpl.Execute(w, data); err != nil {
 		fmt.Println(err)
 	}
+}
+
+// pingHandler -
+// Simple health check.
+func pingHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "pong!")
 }
 
 // lookupGeoIP this function looks up the ip address
@@ -231,6 +240,7 @@ func lookupGeoTz(lat float32, lon float32) string {
 	return tzData.TZID
 }
 
+// forceTextHandler -
 // Prevent Content-Type sniffing
 func forceTextHandler(w http.ResponseWriter, r *http.Request) {
 	// https://stackoverflow.com/questions/18337630/what-is-x-content-type-options-nosniff
@@ -240,6 +250,7 @@ func forceTextHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "{\"status\":\"ok\"}")
 }
 
+// healthHandler -
 // Report server status
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	if atomic.LoadInt32(&healthy) == 1 {
@@ -247,6 +258,7 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusServiceUnavailable)
+	fmt.Fprintln(w, "{\"status\":\"ok\"}")
 }
 
 // logging just a simple logging handler
