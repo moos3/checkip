@@ -41,7 +41,6 @@ build:
     - script:
       name: copy binary
       code: cp app "$WERCKER_OUTPUT_DIR"
-      
 deploy-app:
     box: golang
     steps:
@@ -56,7 +55,7 @@ deploy-app:
         cmd: ./app
         tag: $WERCKER_GIT_COMMIT
         ports: "3000"
-        resposity: quay.io/moos3/checkip
+        repository:: quay.io/moos3/checkip
         registry: https://quay.io
       # ship to docker
       - internal/docker-scratch-push:
@@ -65,5 +64,5 @@ deploy-app:
         cmd: ./app
         tag: $WERCKER_GIT_COMMIT
         ports: "3000"
-        resposity: moos3/checkip
+        repository:: moos3/checkip
         registry: https://hub.docker.com
